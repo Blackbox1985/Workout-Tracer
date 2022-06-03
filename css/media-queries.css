@@ -1,0 +1,129 @@
+/* MEDIA QUERIES */
+@media (max-width: 1199px) {
+  html {
+    font-size: 56.25%;
+  }
+
+  .side {
+    width: 40%;
+    flex-basis: 40%;
+  }
+
+  .logo img {
+    width: 130px;
+  }
+
+  .menu .menu__link:link,
+  .menu .menu__link:visited {
+    flex-direction: column;
+  }
+
+  .menu .menu__link .menu__icon {
+    margin-right: 0;
+  }
+
+  .delete-confirmation {
+    height: auto;
+  }
+
+  .form {
+    height: 145.56px;
+  }
+
+  .form.form-editing {
+    height: 152.5px; /* Same height of .workout at these resolutions */
+  }
+
+  .form__group {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .form__label {
+    margin-right: 0;
+    margin-bottom: 0.3rem;
+  }
+
+  .form__input {
+    width: 80%;
+  }
+
+  .workout__details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .workout__value {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 991px) {
+  html {
+    font-size: 50%;
+  }
+
+  .side {
+    width: 45%;
+    flex-basis: 45%;
+  }
+
+  .logo img {
+    width: 120px;
+  }
+
+  .form {
+    height: 133.16px;
+  }
+
+  .workout__value {
+    font-size: 1.9rem;
+  }
+
+  .form.form-editing {
+    height: 136px; /* Same height of .workout at these resolutions */
+  }
+
+  .leaflet-popup-content {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .logo img {
+    width: 170px;
+  }
+
+  .side {
+    width: 100%;
+    flex-basis: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 47%;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .menu__link span {
+    display: none;
+  }
+
+  .form.form-editing {
+    height: 136px; /* Same height of .workout at these resolutions */
+  }
+
+  #map {
+    border-radius: 0.5rem;
+    border: 1rem solid var(--color-dark--1);
+    height: auto;
+  }
+
+  .leaflet-popup-content {
+    font-size: 1.7rem;
+  }
+}

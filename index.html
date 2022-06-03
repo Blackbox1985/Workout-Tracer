@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <link rel="shortcut icon" type="image/png" href="img/icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+      integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+      crossorigin=""
+    />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/media-queries.css" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script
+      defer
+      src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+      integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+      crossorigin=""
+    ></script>
+    <script defer src="js/script.js"></script>
+    <title>Workout Tracer - Save your workouts</title>
+  </head>
+
+  <body>
+    <main class="app">
+      <div class="side">
+        <div class="logo">
+          <!-- prettier-ignore -->
+          <img
+            srcset="
+            img/logo-mobile-workout-tracer.png 170w,
+            img/logo-workout-tracer.png 157w
+            "
+            sizes="(max-width: 767px) 170px, (min-width:768px) 157px, 
+          157px"
+            src="img/logo-workout-tracer.png"
+            alt="logo"
+          />
+        </div>
+
+        <div class="menu">
+          <ul class="menu__options">
+            <li class="menu__option menu__option--show">
+              <a class="menu__link" href="#">
+                <svg class="menu__icon">
+                  <use xlink:href="img/sprite.svg#icon-eye"></use>
+                </svg>
+                <span>Show All</span>
+              </a>
+            </li>
+            <li class="menu__option menu__option--delete">
+              <a class="menu__link" href="#">
+                <svg class="menu__icon">
+                  <use xlink:href="img/sprite.svg#icon-squared-cross"></use>
+                </svg>
+                <span>Delete All</span>
+              </a>
+            </li>
+            <li class="menu__option menu__option--sort">
+              <a class="menu__link" href="#">
+                <svg class="menu__icon">
+                  <use
+                    xlink:href="img/sprite.svg#icon-arrow-with-circle-down"
+                  ></use>
+                </svg>
+                <span>Sort (<em id="sort-choice">date</em>)</span>
+              </a>
+              <div class="menu__menu-sort menu__menu-sort--hidden">
+                <ul class="menu__menu-sort-options">
+                  <li>
+                    <a
+                      class="menu__menu-sort-option menu__menu-sort-option--date"
+                      href="#"
+                    >
+                      <svg class="menu__menu-sort-icon">
+                        <use xlink:href="img/sprite.svg#icon-calendar"></use>
+                      </svg>
+                      Sort by date
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="menu__menu-sort-option menu__menu-sort-option--distance"
+                      href="#"
+                    >
+                      <svg class="menu__menu-sort-icon">
+                        <use xlink:href="img/sprite.svg#icon-line-graph"></use>
+                      </svg>
+                      Sort by distance
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="menu__menu-sort-option menu__menu-sort-option--duration"
+                      href="#"
+                    >
+                      <svg class="menu__menu-sort-icon">
+                        <use xlink:href="img/sprite.svg#icon-stopwatch"></use>
+                      </svg>
+                      Sort by duration
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="delete-confirmation delete-confirmation--hidden">
+          <h4 class="delete-confirmation__title">
+            Are you sure you want to delete all workouts?
+          </h4>
+          <div class="delete-confirmation__btns">
+            <button
+              type="button"
+              class="delete-confirmation__btn delete-confirmation__btn--yes"
+            >
+              <svg
+                class="delete-confirmation__btn-icon delete-confirmation__btn-icon--yes"
+              >
+                <use xlink:href="img/sprite.svg#icon-check"></use>
+              </svg>
+              Yes, Go on
+            </button>
+            <button
+              type="button"
+              class="delete-confirmation__btn delete-confirmation__btn--no"
+            >
+              <svg
+                class="delete-confirmation__btn-icon delete-confirmation__btn-icon--no"
+              >
+                <use xlink:href="img/sprite.svg#icon-cross"></use>
+              </svg>
+              Not really
+            </button>
+          </div>
+        </div>
+
+        <form class="form hidden" id="form">
+          <div class="form__group">
+            <label class="form__label" for="workout-type">Type</label>
+            <select
+              class="form__input form__input--select"
+              id="workout-type"
+              name="workout-type"
+            >
+              <option value="running">Running</option>
+              <option value="cycling">Cycling</option>
+            </select>
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="distance">Distance</label>
+            <input
+              class="form__input"
+              type="text"
+              name="distance"
+              id="distance"
+              placeholder="km"
+            />
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="duration">Duration</label>
+            <input
+              class="form__input"
+              type="text"
+              name="duration"
+              id="duration"
+              placeholder="min"
+            />
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="cadence">Cadence</label>
+            <input
+              class="form__input"
+              type="text"
+              name="cadence"
+              id="cadence"
+              placeholder="step/min"
+            />
+          </div>
+          <div class="form__group form__group--hidden">
+            <label class="form__label" for="elevation">Elev Gain</label>
+            <input
+              class="form__input"
+              type="text"
+              name="elevation"
+              id="elevation"
+              placeholder="meters"
+            />
+          </div>
+          <input type="submit" value="OK" />
+
+          <div class="form-control hidden" id="form-control">
+            <h4 class="form-control__title">
+              All input fields must be positive numbers
+            </h4>
+            <button type="button" class="form__btn form__btn--dismiss">
+              <svg class="form__btn-icon form__btn-icon--save">
+                <use xlink:href="img/sprite.svg#icon-check"></use>
+              </svg>
+              OK, got it
+            </button>
+          </div>
+        </form>
+
+        <div class="workouts">
+          <form
+            class="form form-editing form-editing--hidden"
+            id="form-editing"
+          >
+            <div class="form__group">
+              <label class="form__label" for="workout-type-e">Type</label>
+              <select
+                class="form__input form__input--select"
+                id="workout-type-e"
+                name="workout-type-e"
+              >
+                <option value="running">Running</option>
+                <option value="cycling">Cycling</option>
+              </select>
+            </div>
+            <div class="form__group">
+              <label class="form__label" for="distance-e">Distance</label>
+              <input
+                class="form__input"
+                type="text"
+                name="distance-e"
+                id="distance-e"
+                placeholder="km"
+              />
+            </div>
+            <div class="form__group">
+              <label class="form__label" for="duration-e">Duration</label>
+              <input
+                class="form__input"
+                type="text"
+                name="duration-e"
+                id="duration-e"
+                placeholder="min"
+              />
+            </div>
+            <div class="form__group">
+              <label class="form__label" for="cadence-e">Cadence</label>
+              <input
+                class="form__input"
+                type="text"
+                name="cadence-e"
+                id="cadence-e"
+                placeholder="step/min"
+              />
+            </div>
+            <div class="form__group form__group--hidden">
+              <label class="form__label" for="elevation-e">Elev Gain</label>
+              <input
+                class="form__input"
+                type="text"
+                name="elevation-e"
+                id="elevation-e"
+                placeholder="meters"
+              />
+            </div>
+            <button type="submit" class="form__btn form__btn--save">
+              <svg class="form__btn-icon form__btn-icon--save">
+                <use xlink:href="img/sprite.svg#icon-check"></use>
+              </svg>
+              Save
+            </button>
+            <button type="button" class="form__btn form__btn--cancel">
+              <svg class="form__btn-icon form__btn-icon--cancel">
+                <use xlink:href="img/sprite.svg#icon-cross"></use>
+              </svg>
+              Cancel
+            </button>
+
+            <div class="form-control hidden" id="form-editing-control">
+              <h4 class="form-control__title">
+                All input fields must be positive numbers
+              </h4>
+              <button type="button" class="form__btn form__btn--dismiss">
+                <svg class="form__btn-icon form__btn-icon--save">
+                  <use xlink:href="img/sprite.svg#icon-check"></use>
+                </svg>
+                OK, got it
+              </button>
+            </div>
+          </form>
+        </div>
+        <p class="copyright">
+          &copy; Copyright by
+          <a
+            class="twitter-link"
+            target="_blank"
+            href="https://www.linkedin.com/in/vincent-giovanni-fattore/"
+            >Vincent Fattore</a
+          >
+          - This project is a complete refactoring of 'Mapty' App by
+          <a
+            class="twitter-link"
+            target="_blank"
+            href="https://twitter.com/jonasschmedtman"
+            >Jonas Schmedtmann</a
+          >.
+        </p>
+      </div>
+      <div id="map"></div>
+    </main>
+  </body>
+</html>
